@@ -53,7 +53,8 @@ function Square(props) {
         super(props)
         this.state = {
             history: [{
-                squares: Array(9).fill(null)
+                squares: Array(9).fill(null),
+                location: '_(_,_)'
             }],
             stepNumber: 0,
             xIsNext: true
@@ -65,15 +66,17 @@ function Square(props) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1)
         const current = history[ history.length -1 ]
         const squares = current.squares.slice()
+        const currentPlayer = this.state.xIsNext ? 'X' : '0'
 
         if(calculateWinner(squares) || squares[i]) {
             return;
         }
 
-        squares[i] = this.state.xIsNext ? 'X' : '0'
+        squares[i] = currentPlayer
         this.setState({ 
             history: history.concat([{
-                squares: squares
+                squares: squares,
+                location: currentPlayer + '(' + Math.floor(i/3) + ',' + Math.floor(i%3) + ')'
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext
@@ -94,11 +97,14 @@ function Square(props) {
         const winner = calculateWinner(current.squares)
 
         const moves = history.map((step, move) => {
+
             const desc = move ?
             'Go to move #' + move :
             'Go to game start'
+
             return (
                 <li key={move}>
+                    {step.location}
                     <button onClick={() => this.jumpTo(move)}>{desc}</button>
                 </li>
             )
