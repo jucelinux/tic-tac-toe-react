@@ -66,17 +66,18 @@ function Square(props) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1)
         const current = history[ history.length -1 ]
         const squares = current.squares.slice()
-        const currentPlayer = this.state.xIsNext ? 'X' : '0'
+        const currentPlay = this.state.xIsNext ? 'X' : '0'
 
         if(calculateWinner(squares) || squares[i]) {
             return;
         }
 
-        squares[i] = currentPlayer
+        squares[i] = currentPlay
+
         this.setState({ 
             history: history.concat([{
                 squares: squares,
-                location: currentPlayer + '(' + Math.floor(i/3) + ',' + Math.floor(i%3) + ')'
+                location: currentPlay + '(' + Math.floor(i/3) + ',' + Math.floor(i%3) + ')'
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext
@@ -113,8 +114,10 @@ function Square(props) {
         let status
         if (winner) {
             status = 'Winner: ' + winner;
-        } else {
-        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+        } else if(history.length === 10) {
+            status = 'Draw'
+        }else {
+            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
 
         return (
